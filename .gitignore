@@ -1,6 +1,6 @@
 # folders and data
-*/data
-*/__pycache__
+a3/data
+a3/utils/__pycache__
 
 # files
-*.DS_Store
+a3/.DS_Store
