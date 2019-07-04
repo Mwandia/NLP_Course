@@ -16,10 +16,8 @@ def sigmoid(x):
     s -- sigmoid(x)
     """
 
-    ### YOUR CODE HERE
-
-    ### END YOUR CODE
-
+    s = 1.0/(1.0+np.exp(-x))
+    
     return s
 
 
@@ -37,11 +35,11 @@ def naiveSoftmaxLossAndGradient(
 
     Arguments:
     centerWordVec -- numpy ndarray, center word's embedding
-                    (v_c in the pdf handout)
+                    (v_c in the pdf handout) (d x 1 matrix)
     outsideWordIdx -- integer, the index of the outside word
                     (o of u_o in the pdf handout)
     outsideVectors -- outside vectors (rows of matrix) for all words in vocab
-                      (U in the pdf handout)
+                      (U in the pdf handout) (v x d matrix where v is the number of vectors)
     dataset -- needed for negative sampling, unused here.
 
     Return:
@@ -58,6 +56,15 @@ def naiveSoftmaxLossAndGradient(
     ### This numerically stable implementation helps you avoid issues pertaining
     ### to integer overflow. 
 
+    # computing loss
+    y_hat = softmax(np.dot(outsideVectors, centerWordVec))
+    loss = -np.log(y_hat[outsideWordIdx])
+
+    # computing gradients
+    y = zeros_like(y)
+    y[outsideWordIdx] = 1 
+    gradCenterVec = np.dot(outsideVectors.T, (y_hat-y))
+    gradOutsideVecs = np.dot((y_hat-y), centerWordVec.T)
 
     ### END YOUR CODE
 
@@ -104,7 +111,29 @@ def negSamplingLossAndGradient(
 
     ### YOUR CODE HERE
 
+    # Init
+    loss = 0.0
+    gradCenterVec = np.zeros_like(centerWordVec)
+    gradOutsideVecs = np.zeros_like(outsideVectors)
+
+    # important vectors
+    u_o = outsideVectors[outsideWordIdx]
+    s_o = sigmoid(np.dot(u_o, centerWordVec))
+
     ### Please use your implementation of sigmoid in here.
+    loss -= np.log(s_o)
+    gradCenterVecs -= u_o * (1.0 - s_o)
+    gradOutsideVecs[outsideWordIdx] += -centerWordVec * (1.0 - s_o)
+
+    for k in range(K):
+        neg_sample = indices[k+1]
+        u_k = outsideVectors[neg_sample]
+        s_k = sigmoid(np.dot(-u_k, centerWordVec))
+
+        # update loss and gradients
+        loss -= np.log(s_k) 
+        gradCenterVec += centerWordVec * (1.0 - s_k)
+        gradOutsideVecs[neg_sample] += centerWordVec * (1.0 - s_k)
 
 
     ### END YOUR CODE
