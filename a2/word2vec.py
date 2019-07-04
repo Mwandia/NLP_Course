@@ -61,10 +61,10 @@ def naiveSoftmaxLossAndGradient(
     loss = -np.log(y_hat[outsideWordIdx])
 
     # computing gradients
-    y = zeros_like(y)
+    y = np.zeros_like(y_hat)
     y[outsideWordIdx] = 1 
     gradCenterVec = np.dot(outsideVectors.T, (y_hat-y))
-    gradOutsideVecs = np.dot((y_hat-y), centerWordVec.T)
+    gradOutsideVecs = np.outer((y_hat-y), centerWordVec)
 
     ### END YOUR CODE
 
@@ -122,7 +122,7 @@ def negSamplingLossAndGradient(
 
     ### Please use your implementation of sigmoid in here.
     loss -= np.log(s_o)
-    gradCenterVecs -= u_o * (1.0 - s_o)
+    gradCenterVec -= u_o * (1.0 - s_o)
     gradOutsideVecs[outsideWordIdx] += -centerWordVec * (1.0 - s_o)
 
     for k in range(K):
@@ -179,8 +179,8 @@ def skipgram(currentCenterWord, windowSize, outsideWords, word2Ind,
     ### YOUR CODE HERE
 
     # Initialise
-    ind_v = word2Inc[currentCenterWord]
-    v_c = centerWordVectors[ind_v]
+    ind_c = word2Ind[currentCenterWord]
+    v_c = centerWordVectors[ind_c]
 
     for word in outsideWords:
         ind_w = word2Ind[word]
