@@ -178,6 +178,17 @@ def skipgram(currentCenterWord, windowSize, outsideWords, word2Ind,
 
     ### YOUR CODE HERE
 
+    # Initialise
+    ind_v = word2Inc[currentCenterWord]
+    v_c = centerWordVectors[ind_v]
+
+    for word in outsideWords:
+        ind_w = word2Ind[word]
+        loss_w, gradCenterVec, gradOutsideVecs = word2vecLossAndGradient(v_c, ind_w, outsideVectors, dataset)
+        loss += loss_w
+        gradCenterVecs[ind_c] += gradCenterVec
+        gradOutsideVectors += gradOutsideVecs 
+
     ### END YOUR CODE
 
     return loss, gradCenterVecs, gradOutsideVectors
