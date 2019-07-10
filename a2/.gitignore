@@ -1,0 +1,6 @@
+/__pycache__
+*.npy
+*.pickle
+*.swp
+/datasets
+.DS_Store

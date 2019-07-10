@@ -132,7 +132,7 @@ def negSamplingLossAndGradient(
 
         # update loss and gradients
         loss -= np.log(s_k) 
-        gradCenterVec += centerWordVec * (1.0 - s_k)
+        gradCenterVec += u_k * (1.0 - s_k)
         gradOutsideVecs[neg_sample] += centerWordVec * (1.0 - s_k)
 
 
