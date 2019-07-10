@@ -1,6 +1,10 @@
 # folders and data
 a3/data
 a3/utils/__pycache__
+**/datasets
 
 # files
-a3/.DS_Store
+*.npy
+*.pickle
+*.swp
+.DS_Store
