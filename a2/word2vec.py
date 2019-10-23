@@ -16,7 +16,7 @@ def sigmoid(x):
     s -- sigmoid(x)
     """
 
-    s = 1.0/(1.0+np.exp(-x))
+
     
     return s
 
@@ -56,15 +56,7 @@ def naiveSoftmaxLossAndGradient(
     ### This numerically stable implementation helps you avoid issues pertaining
     ### to integer overflow. 
 
-    # computing loss
-    y_hat = softmax(np.dot(outsideVectors, centerWordVec))
-    loss = -np.log(y_hat[outsideWordIdx])
 
-    # computing gradients
-    y = np.zeros_like(y_hat)
-    y[outsideWordIdx] = 1 
-    gradCenterVec = np.dot(outsideVectors.T, (y_hat-y))
-    gradOutsideVecs = np.outer((y_hat-y), centerWordVec)
 
     ### END YOUR CODE
 
@@ -111,29 +103,6 @@ def negSamplingLossAndGradient(
 
     ### YOUR CODE HERE
 
-    # Init
-    loss = 0.0
-    gradCenterVec = np.zeros_like(centerWordVec)
-    gradOutsideVecs = np.zeros_like(outsideVectors)
-
-    # important vectors
-    u_o = outsideVectors[outsideWordIdx]
-    s_o = sigmoid(np.dot(u_o, centerWordVec))
-
-    ### Please use your implementation of sigmoid in here.
-    loss -= np.log(s_o)
-    gradCenterVec -= u_o * (1.0 - s_o)
-    gradOutsideVecs[outsideWordIdx] += -centerWordVec * (1.0 - s_o)
-
-    for k in range(K):
-        neg_sample = indices[k+1]
-        u_k = outsideVectors[neg_sample]
-        s_k = sigmoid(np.dot(-u_k, centerWordVec))
-
-        # update loss and gradients
-        loss -= np.log(s_k) 
-        gradCenterVec += u_k * (1.0 - s_k)
-        gradOutsideVecs[neg_sample] += centerWordVec * (1.0 - s_k)
 
 
     ### END YOUR CODE
@@ -178,16 +147,7 @@ def skipgram(currentCenterWord, windowSize, outsideWords, word2Ind,
 
     ### YOUR CODE HERE
 
-    # Initialise
-    ind_c = word2Ind[currentCenterWord]
-    v_c = centerWordVectors[ind_c]
-
-    for word in outsideWords:
-        ind_w = word2Ind[word]
-        loss_w, gradCenterVec, gradOutsideVecs = word2vecLossAndGradient(v_c, ind_w, outsideVectors, dataset)
-        loss += loss_w
-        gradCenterVecs[ind_c] += gradCenterVec
-        gradOutsideVectors += gradOutsideVecs 
+    
 
     ### END YOUR CODE
 

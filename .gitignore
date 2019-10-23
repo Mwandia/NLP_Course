@@ -1,6 +1,6 @@
 # folders and data
-a3/data
-a3/utils/__pycache__
+**/data
+**/__pycache__
 **/datasets
 
 # files
@@ -8,3 +8,5 @@ a3/utils/__pycache__
 *.pickle
 *.swp
 .DS_Store
+*.zip
+*.pdf
