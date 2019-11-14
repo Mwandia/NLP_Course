@@ -16,7 +16,7 @@ def sigmoid(x):
     s -- sigmoid(x)
     """
 
-
+    s = 1/(1 + np.exp(-x))
     
     return s
 
@@ -56,7 +56,13 @@ def naiveSoftmaxLossAndGradient(
     ### This numerically stable implementation helps you avoid issues pertaining
     ### to integer overflow. 
 
+    y_hat = softmax(np.dot(outsideVectors,centerWordVec))
+    loss = -1 * np.log(y_hat[outsideWordIdx])
 
+    y_hat[outsideWordIdx] = y_hat[outsideWordIdx] - 1.0
+
+    gradCenterVec = np.dot(y_hat,outsideVectors)
+    gradOutsideVecs = np.outer(y_hat,centerWordVec)
 
     ### END YOUR CODE
 
@@ -101,11 +107,25 @@ def negSamplingLossAndGradient(
     negSampleWordIndices = getNegativeSamples(outsideWordIdx, dataset, K)
     indices = [outsideWordIdx] + negSampleWordIndices
 
-    ### YOUR CODE HERE
+    loss = 0.0
+    gradCenterVec = np.zeros(centerWordVec.shape)
+    gradOutsideVecs = np.zeros(outsideVectors.shape)
 
+    scores = np.dot(outsideVectors[outsideWordIdx],centerWordVec)
+    s = sigmoid(scores)
 
+    loss = -np.log(s)
+    gradCenterVec = -1 * outsideVectors[outsideWordIdx] * (1 - s)
+    gradOutsideVecs[outsideWordIdx] = centerWordVec * (s - 1)
 
-    ### END YOUR CODE
+    for sample in indices[1:]:
+        wordVec = outsideVectors[sample]
+        y_hat = sigmoid(np.dot(-1 * wordVec,centerWordVec))
+        
+        loss -= np.log(y_hat)
+        gradCenterVec += wordVec * (1 - y_hat)
+        gradOutsideVecs[sample] += centerWordVec * (1 - y_hat)
+
 
     return loss, gradCenterVec, gradOutsideVecs
 
@@ -147,7 +167,16 @@ def skipgram(currentCenterWord, windowSize, outsideWords, word2Ind,
 
     ### YOUR CODE HERE
 
-    
+    centerWordInd = word2Ind[currentCenterWord]
+    centerWordVec = centerWordVectors[centerWordInd]
+    for outerWord in outsideWords:
+        outerWordInd = word2Ind[outerWord]
+
+        currLoss, currCenterGrad, currOuterGrad = word2vecLossAndGradient(centerWordVec,outerWordInd,outsideVectors,dataset)
+        
+        loss += currLoss
+        gradCenterVecs[centerWordInd] += currCenterGrad
+        gradOutsideVectors += currOuterGrad
 
     ### END YOUR CODE
 

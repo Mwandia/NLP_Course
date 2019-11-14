@@ -2,6 +2,8 @@
 **/data
 **/__pycache__
 **/datasets
+**/utils
+**/.ipynb_checkpoints
 
 # files
 *.npy
