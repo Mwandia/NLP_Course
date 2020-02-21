@@ -105,9 +105,9 @@ def question_1d_sanity_check(model, src_sents, tgt_sents, vocab):
         enc_hiddens_pred, dec_init_state_pred = model.encode(source_padded, source_lengths)
     assert(np.allclose(enc_hiddens_target.numpy(), enc_hiddens_pred.numpy())), "enc_hiddens is incorrect: it should be:\n {} but is:\n{}".format(enc_hiddens_target, enc_hiddens_pred)
     print("enc_hiddens Sanity Checks Passed!")
-    assert(np.allclose(dec_init_state_target[0].numpy(), dec_init_state_pred[0].numpy())), "dec_init_state[0] is incorrect: it should be:\n {} but is:\n{}".format(dec_init_state_target[0], dec_init_state_pred[0])
+    assert(np.allclose(dec_init_state_target[0].numpy(), dec_init_state_pred[0].numpy())), "dec_init_state[0] is incorrect: it should be:\n {} \nbut is:\n{}".format(dec_init_state_target[0], dec_init_state_pred[0])
     print("dec_init_state[0] Sanity Checks Passed!")
-    assert(np.allclose(dec_init_state_target[1].numpy(), dec_init_state_pred[1].numpy())), "dec_init_state[1] is incorrect: it should be:\n {} but is:\n{}".format(dec_init_state_target[1], dec_init_state_pred[1])
+    assert(np.allclose(dec_init_state_target[1].numpy(), dec_init_state_pred[1].numpy())), "dec_init_state[1] is incorrect: it should be:\n {} \nbut is:\n{}".format(dec_init_state_target[1], dec_init_state_pred[1])
     print("dec_init_state[1] Sanity Checks Passed!")
     print ("-"*80)
     print("All Sanity Checks Passed for Question 1d: Encode!")
@@ -194,7 +194,7 @@ def main():
 
     # Check Python & PyTorch Versions
     assert (sys.version_info >= (3, 5)), "Please update your installation of Python to version >= 3.5"
-    assert(torch.__version__ == "1.0.0"), "Please update your installation of PyTorch. You have {} and you should have version 1.0.0".format(torch.__version__)
+    assert(torch.__version__ >= "1.0.0"), "Please update your installation of PyTorch. You have {} and you should have version 1.0.0".format(torch.__version__)
 
     # Seed the Random Number Generators
     seed = 1234
