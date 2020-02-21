@@ -4,8 +4,10 @@
 **/datasets
 **/utils
 **/.ipynb_checkpoints
+**/.vscode
 
 # files
+*.png
 *.npy
 *.pickle
 *.swp
